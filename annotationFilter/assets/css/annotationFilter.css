@@ -5,13 +5,16 @@
 
 /* Puts the annotator thing at the bottom */
 #annotation-well{
-	margin:0;
-	padding:1rem 2rem;
-	position:fixed;
-	width:100%;
-	bottom:0;
-	left:0;
-	background-color:lightblue;
+	margin: 0;
+    border-radius: 0.3rem 0.3rem 0 0;
+	padding: 1rem 2rem 1.6rem 2rem;
+    position: fixed;
+    width: 100%;
+    bottom: 0;
+    left: 0;
+    background-color: #ececec;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+	box-shadow: 1px -1px 5px rgba(0, 0, 0, 0.25);
 }
 
 /*====================*/
@@ -142,4 +145,9 @@
 
 .annotation_category-7 {
 	background-color: #fdd5ad;
+}
+
+.select2-search__field{
+	width:150% !important;
+	font-size: .5rem !important;
 }

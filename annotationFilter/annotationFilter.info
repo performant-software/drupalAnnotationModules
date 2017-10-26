@@ -15,5 +15,6 @@ dependencies[] = annotationViewer
 scripts[] = assets/js/annotationFilter.js
 
 ; Include stylesheets
-stylesheets[all][] = assets/css/select2.min.css // FIXME: This should eventually be removed, in favor of Drupal Select2 module
+; FIXME: Select2 should eventually be removed, in favor of Drupal Select2 module
+stylesheets[all][] = assets/css/select2.min.css
 stylesheets[all][] = assets/css/annotationFilter.css

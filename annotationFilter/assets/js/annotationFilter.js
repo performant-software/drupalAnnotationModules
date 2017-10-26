@@ -2,77 +2,72 @@
 // tagfilter.js
 // Applies filters to the page
 ///////////////////////////////////////
+
+// Wrap in drupal so we can get injected vars (in this case we want the basepath for the module later)
 Drupal.behaviors.MYMODULE = {
 	attach: function(context, settings) {
+
+		// Wait for document to load AND the DOM to be fully present (belt and suspenders)
 		jQuery(document).ready(function($) {
 			$(window).on("load", function() {
+
+				// If we find annotation on this page, begin
 				if ($('.field-name-body').find('.lineno').length !== 0) {
-					console.log('AnnotationFilter: Annotation block found! Injecting filters.');
 
+					console.log('AnnotationFilter: Ok! Injecting filters.');
 
+					// Filter panel visible or not, injects next to title
+					var filterButton = ' [<a href="javascript:annotationFilter_toggleFilterPanel();">filter</a>]';
+					$('.block-title').append(filterButton);
 
+					// This is the HTML for the panel itself
+					// We first inject a placeholder, load the content into that and then
+					// one it's all loaded we append it to the content
 					var htmlFile = Drupal.settings.annotationFilter.basepath + '/assets/html/annotationFilter.html';
-					console.log(htmlFile);
-					//$('.field-name-body').load(htmlFile);
+					$('.field-name-body').append('<div id="annotationFilter_temp"></div>');
+					$("#annotationFilter_temp").load(htmlFile, function() {
 
-					$('.field-name-body').append('<div id="devnull"></div>');
-					$("#devnull").load(htmlFile, function() {
+						// Hide the panel by default
+						////$('#annotation-well').hide();
+
+						// Append and remove placeholder`
 						$('.field-name-body').append($(this).html());
-						$("#devnull").remove();
+						$("#annotationFilter_temp").remove();
 
-
-
-						// Setup
-
-						// Grab a reference to the all the annotations
-						var annotations = $(".annotator-hl");
-
-						// Keep a copy of the background colors at load
-						var annotationColors = [];
-						annotations.each(function(index) {
-							//$(this).attr("style", "background-color:")
-							annotationColors.push($(this).css('background-color'));
-						});
-
-
-						//Select2 boxes
-						var tf = $('#tag-filter').select2({
-							data: filterLists['tags'],
-							placeholder: "Select one or more tags",
-							theme: "classic",
-							width: "300px",
-						});
-
-						var cf = $('#cat-filter').select2({
-							data: filterLists['annotation_categories'],
-							placeholder: "Select one or more categories",
-							theme: "classic",
-							width: "300px",
-						});
-
-						var uf = $('#user-filter').select2({
-							data: filterLists['user'],
-							placeholder: "Select one or more annotators",
-							theme: "classic",
-							width: "300px",
-						});
-
-						// Arrays of filters
+						var tf, cf, uf;
 						var tagFilters = [];
 						var categoryFilters = [];
 						var annotatorFilters = [];
+						initSelection();
 
-						// Do this on load (not so useful right now, but in future could keep settings in localstore)
-						applyFiltersToPage();
-
+						var isInitialized = false;
+						var annotations;
+						var annotationColors;
 
 						// Actually apply the filters to the page
 						function applyFiltersToPage() {
+
+							if (!isInitialized) {
+
+								console.log('Initializing...');
+
+								// Grab a reference to the all the annotations
+								annotations = $(".annotator-hl");
+
+								// Keep a copy of the background colors at load
+								annotationColors = [];
+								annotations.each(function(index) {
+									annotationColors.push($(this).css('background-color'));
+								});
+
+								isInitialized = true;
+							}
 
 							// If we have at least one filter enabled, then we will be manually re-coloring
 							if (tagFilters.length > 0 || categoryFilters.length > 0 || annotatorFilters.length > 0) {
 								// blank them out first
 								annotations.attr("style", "background-color:rgba(1,1,1,0.1);border:0");
+
 								// Otherwise just reset to original and GTFO
 							} else {
 								annotations.attr("style", "background-color:rgba(0,0,0,0.0);border:0");
@@ -81,21 +76,24 @@ Drupal.behaviors.MYMODULE = {
 							}
 
 							//Tags
-							console.log("%c TAGS: %c" + tagFilters, 'background: #bbbbbb; color: #0000FF', 'background: #FFFFFF; color: #000000');
-							for (var i = 0; i < tagFilters.length; i++) {
-								var thisTag = tagFilters[i];
-								$("span[data-tags~='" + thisTag + "']").attr("style", "border:1px solid red");
-							}
-
+							//console.log("%c TAGS: %c" + tagFilters, 'background: #bbbbbb; color: #0000FF', 'background: #FFFFFF; color: #000000');
+							annotations.each(function(index) {
+								console.log('Checking...: ' + this.id);
+								var thisObject = document.getElementById(this.id);
+								for (var i = 0; i < tagFilters.length; i++) {
+									var thisTag = tagFilters[i];
+									console.log("....Looking for match for " + thisTag);
+								}
+							});
 							//Categories
-							console.log("%c CATEGORIES: %c" + categoryFilters, 'background: #bbbbbb; color: #EEFF00', 'background: #FFFFFF; color: #000000');
+							//console.log("%c CATEGORIES: %c" + categoryFilters, 'background: #bbbbbb; color: #EEFF00', 'background: #FFFFFF; color: #000000');
 							for (var i = 0; i < categoryFilters.length; i++) {
 								var thisCategory = categoryFilters[i];
-								$("span[data-annotation_categories~='" + thisCategory + "']").attr("style", "border:1px solid green");
+								$("span[data-category~='" + thisCategory + "']").attr("style", "border:1px solid green");
 							}
 
 							//Annotators
-							console.log("%c ANNOTATORS: %c" + annotatorFilters, 'background: #bbbbbb; color: #FF00FF', 'background: #FFFFFF; color: #000000');
+							//console.log("%c ANNOTATORS: %c" + annotatorFilters, 'background: #bbbbbb; color: #FF00FF', 'background: #FFFFFF; color: #000000');
 							for (var i = 0; i < annotatorFilters.length; i++) {
 								var thisUser = annotatorFilters[i];
 								$("span[data-user~='" + thisUser + "']").attr("style", "border:1px solid blue");
@@ -117,10 +115,8 @@ Drupal.behaviors.MYMODULE = {
 							applyFiltersToPage();
 						});
 
-
 						// Category Add
 						cf.on("select2:select", function(e) {
-							console.log("Adding:" + e.params.data.id);
 							categoryFilters.push(e.params.data.id);
 							applyFiltersToPage();
 						});
@@ -129,7 +125,6 @@ Drupal.behaviors.MYMODULE = {
 							removeObjectFromArray(e.params.data.id, categoryFilters);
 							applyFiltersToPage();
 						});
-
 
 						// Annotator Add
 						uf.on("select2:select", function(e) {
@@ -147,32 +142,10 @@ Drupal.behaviors.MYMODULE = {
 						function resetAnnotationsToOriginal() {
 							idx = 0;
 							annotations.each(function(index) {
-								//$(this).css('background-color','yellow');
-								//annotationColors.push($(this).css('background-color'));
 								$(this).css("background-color", annotationColors[idx]);
 								idx++;
 							});
 						}
-
-
-						// Any annotation gets clicked
-						annotations.click(function(a) {
-							var idtarget = a.target;
-
-							$(".glyphicon-comment").remove();
-							$(idtarget).prepend('<i class="glyphicon glyphicon-comment"></i>');
-
-							var customTags = ['[%', '%]'];
-							var anno = Object.assign({}, idtarget.dataset)
-
-							anno.quote = $(idtarget).text()
-							var template = $('#annotation-template').html();
-							Mustache.parse(template, customTags);
-							var rendered = Mustache.render(template, anno);
-							$("#annotation-viewer").html(rendered);
-
-						});
-
 
 						// Helper: Remove objects from array
 						function removeObjectFromArray(obj, array) {
@@ -199,9 +172,61 @@ Drupal.behaviors.MYMODULE = {
 							return -1
 						});
 
+						function initSelection() {
+							tf = $('#tag-filter').select2({
+								data: filterLists['tags'],
+								allowClear: true,
+								placeholder: "Select one or more tags",
+								theme: "classic",
+								width: "300px",
+								allowClear: false
+							});
 
-						// TODO: Implement Next/Previous Annotation Buttons.
-						// TODO: Implement Next/Previous Viewport's-worth Buttons. (page breaks?)
+
+
+							cf = $('#cat-filter').select2({
+								data: filterLists['category'],
+								allowClear: true,
+								placeholder: "Select one or more categories",
+								theme: "classic",
+								width: "300px",
+								allowClear: false
+							});
+
+							uf = $('#user-filter').select2({
+								data: filterLists['user'],
+								allowClear: true,
+								placeholder: "Select one or more annotators",
+								theme: "classic",
+								width: "300px",
+								allowClear: false
+							});
+						}
+
+						function clearSelection() {
+							//Select2 boxes
+							tf.val(null).trigger('change');
+							cf.val(null).trigger('change');
+							uf.val(null).trigger('change');
+
+							// Arrays of filters
+							tagFilters = [];
+							categoryFilters = [];
+							annotatorFilters = [];
+						}
+
+
+						window.annotationFilter_resetFilters = (function() {
+							if (isInitialized) {
+								resetAnnotationsToOriginal();
+								clearSelection();
+							}
+						});
+
+						window.annotationFilter_toggleFilterPanel = (function() {
+							window.annotationFilter_resetFilters();
+							jQuery('#annotation-well').toggle();
+						});
 
 
 					});
