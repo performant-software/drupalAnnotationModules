@@ -1,11 +1,14 @@
+; annotationViewer
+;
 ; This module is a drupal-ized version of "Margin Viewer for Annotator"
 ; https://github.com/albertjuhe/annotator_view.git
-
-name = "Annotation Viewer"
-description = "Adds annotation viewer support"
+;
 core = "7.x"
 package = Performant
-files[] = annotationViewer.module
+name = "Annotation Viewer"
+description = "Adds annotation viewer support"
+
+;files[] = annotationViewer.module
 
 ; Annotator core
 scripts[] = assets/js/annotator-full.min.js

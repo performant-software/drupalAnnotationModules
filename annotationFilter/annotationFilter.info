@@ -1,0 +1,16 @@
+; annotationFilter
+;
+; This module is a drupal-ized filter for annotations
+; it requires annotationViewer (for JS and CSS dependencies)
+;
+core = "7.x"
+package = Performant
+name = "Annotation Filter"
+description = "Adds filters to annotations"
+dependencies[] = annotationViewer
+
+; JS Injector
+scripts[] = assets/js/annotationFilter.js
+
+; Include stylesheets
+stylesheets[all][] = assets/css/annotationFilter.css
