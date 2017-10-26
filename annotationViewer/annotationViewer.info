@@ -8,8 +8,6 @@ package = Performant
 name = "Annotation Viewer"
 description = "Adds annotation viewer support"
 
-;files[] = annotationViewer.module
-
 ; Annotator core
 scripts[] = assets/js/annotator-full.min.js
 

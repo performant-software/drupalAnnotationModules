@@ -1,8 +1,7 @@
 jQuery(document).ready(function($) {
 	$(window).on("load", function() {
-		console.log('AnnotationViewer Module: Looking for annotations...');
 		if ($('.field-name-body').find('.lineno').length !== 0) {
-			console.log('AnnotationViewer Module: Found! Injecting sidebar.');
+			console.log('AnnotationViewer: Annotations found! Injecting sidebar.');
 			$.i18n.load(i18n_dict);
 			var annotator = $('.field-name-body').annotator().annotator().data('annotator');
 			var propietary = 'anon';
@@ -30,8 +29,6 @@ jQuery(document).ready(function($) {
 			$('#anotacions-uoc-panel').slimscroll({
 				height: '100%'
 			});
-		} else {
-			console.log('AnnotationViewer Module: No annotations found, leaving quietly.');
 		}
 	})
 });

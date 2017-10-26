@@ -5,7 +5,20 @@ The modules do not all need to be installed, but there are dependencies, so they
 ## A Note on Style
 If you would like to change the style (the highlight color for instance) you should NOT edit the css included in the module. Instead, you should copy the CSS block you wish to edit into your theme CSS and override the style that way.
 
-## To install 
+## Dependencies
+To use "annotationViewer" you need to make sure Drupal has jQuery 1.5+:
+- [Install Drupal JQuery Upgrade](https://www.drupal.org/project/jquery_update)
+
+To use "annotationFilter" you need to make sure Drupal has bootstrap, ~~library and select2~~ installed first:
+
+- [Install Drupal Bootstrap](https://www.drupal.org/project/bootstrap/releases/7.x-3.15)
+https://www.drupal.org/project/libraries
+
+NOTE: 10/26/17 The correct thing is to use the Drupal Select2 module, but it appears broken, so for now we ship with Select2 embedded. For now do NOT install these:
+- ~~[Install Drupal API Library](https://www.drupal.org/project/libraries)~~
+- ~~[Install Drupal Select2](https://www.drupal.org/project/select2)~~
+
+## To install Modules
 you have two options:
 
 
