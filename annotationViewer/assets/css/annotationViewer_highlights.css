@@ -1,0 +1,46 @@
+/*
+annotationViewer_highlights.css
+
+Highlight colors for annotation types
+
+IMPORTANT: If you want to change these you should NOT edit them here, instead
+make a copy of the block you want to change into your theme CSS and edit that.
+*/
+
+/*historical annotations*/
+.annotator-hl-5 {
+	background: #adadd5;
+	cursor: pointer;
+}
+
+
+/*interpretative annotations*/
+.annotator-hl-4 {
+	background: #d5d5fd;
+	cursor: pointer;
+}
+
+
+/*cultural annotations*/
+.annotator-hl-3 {
+	background: #d5adfd;
+	cursor: pointer;
+}
+
+
+/*textual annotations*/
+.annotator-hl-6 {
+	background: #d5fdad;
+	cursor: pointer;
+}
+
+
+/*linguistic annotations*/
+.annotator-hl-7 {
+	background: #fdd5ad;
+	cursor: pointer;
+}
+
+.annotator-hl-filtered {
+	background-color: transparent;
+}
