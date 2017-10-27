@@ -78,6 +78,8 @@ Drupal.behaviors.MYMODULE = {
 							//Tags
 							//console.log("%c TAGS: %c" + tagFilters, 'background: #bbbbbb; color: #0000FF', 'background: #FFFFFF; color: #000000');
 							annotations.each(function(index) {
+								var annotations = $('.field-name-body').annotator().annotator().data;
+								var annotator = $('.field-name-body').annotator().annotator().data('annotator');
 								console.log('Checking...: ' + this.id);
 								var thisObject = document.getElementById(this.id);
 								for (var i = 0; i < tagFilters.length; i++) {
