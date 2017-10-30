@@ -8,7 +8,7 @@ make a copy of the block you want to change into your theme CSS and edit that.
 */
 
 
-/* Lifted from bootstrap */
+/* Fixme: Lifted from bootstrap */
 
 * {
 	-webkit-box-sizing: border-box;
@@ -18,7 +18,6 @@ make a copy of the block you want to change into your theme CSS and edit that.
 
 
 /* Temporary turning of annotatin tooltips*/
-
 .annotator-outer.annotator-viewer {
 	display: none;
 }
@@ -199,11 +198,7 @@ make a copy of the block you want to change into your theme CSS and edit that.
 	height: 20px;
 }
 
-.hightlight {
-	background: #dfffbf;
-	border: 1px solid #b3b3b3;
-	height: 20px;
-}
+
 
 .subratllat {
 	background: rgba(255, 255, 10, 0.3);

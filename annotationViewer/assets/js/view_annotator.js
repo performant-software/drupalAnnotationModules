@@ -1,7 +1,3 @@
-
-
-
-
 // Wrap in drupal so we can get injected vars (in this case we want the basepath for the module later)
 Drupal.behaviors.AnnotationViewer = {
 	attach: function(context, settings) {
@@ -28,13 +24,20 @@ Drupal.behaviors.AnnotationViewer = {
 					return child;
 				};
 
-			//constants
-
-
+			// FIXME: Replace these with FA icons
 			var IMAGE_DELETE = Drupal.settings.annotationViewer.basepath + '/assets/img/icono_eliminar.png';
 			var IMAGE_DELETE_OVER = Drupal.settings.annotationViewer.basepath + '/assets/img/papelera_over.png';
 			var SHARED_ICON = Drupal.settings.annotationViewer.basepath + '/assets/img/shared-icon.png';
 			var EDIT_ICON = Drupal.settings.annotationViewer.basepath + '/assets/img/shared-icon.png';
+
+
+
+			// FIXME: This code is fond of hardcoding CSS selectors, which is brutal to keep track of
+			// I'm cleaning them up as I go
+			var selector_annotationPanel_id = "anotacions-uoc-panel";
+			var selector_annotationContainer_class = "container-anotacions";
+			var selector_annotationCount_id = "count-anotations";
+			var prefix_annotationblock_selector = "#annotation-";
 
 			Annotator.Plugin.AnnotatorViewer = (function(_super) {
 				__extends(AnnotatorViewer, _super);
@@ -52,9 +55,7 @@ Drupal.behaviors.AnnotationViewer = {
 
 
 				AnnotatorViewer.prototype.field = null;
-
 				AnnotatorViewer.prototype.input = null;
-
 				AnnotatorViewer.prototype.options = {
 					AnnotatorViewer: {}
 				};
@@ -73,12 +74,8 @@ Drupal.behaviors.AnnotationViewer = {
 						this.onDeleteMouseout = __bind(this.onDeleteMouseout, this);
 						this.onCancelPanel = __bind(this.onCancelPanel, this);
 						this.onSavePanel = __bind(this.onSavePanel, this);
-
 						AnnotatorViewer.__super__.constructor.apply(this, arguments);
-
-
 					}
-
 				};
 
 				AnnotatorViewer.prototype.pluginInit = function() {
@@ -97,7 +94,7 @@ Drupal.behaviors.AnnotationViewer = {
 				My annotations have the me class
 				*/
 				AnnotatorViewer.prototype.onFilter = function(event) {
-					var annotations_panel = jQuery(".container-anotacions").find('.annotator-marginviewer-element');
+					var annotations_panel = jQuery('.'+selector_annotationContainer_class).find('.annotator-marginviewer-element');
 					jQuery(annotations_panel).hide();
 
 					var class_view = "";
@@ -107,7 +104,8 @@ Drupal.behaviors.AnnotationViewer = {
 						jQuery('li.filter-panel').find('input:checked').each(function() {
 							class_view += jQuery(this).attr('rel') + '.';
 						});
-						jQuery('.container-anotacions > li.' + class_view.substring(0, class_view.length - 1)).show();
+						var selector = '.'+ selector_annotationContainer_class + ' > li.';
+						jQuery(selector + class_view.substring(0, class_view.length - 1)).show();
 					} else {
 						jQuery(annotations_panel).show();
 					}
@@ -145,10 +143,10 @@ Drupal.behaviors.AnnotationViewer = {
 				//Textarea editor controller
 				AnnotatorViewer.prototype.textareaEditor = function(annotator_textArea, item) {
 					//First we have to get the text, if no, we will have an empty text area after replace the div
-					if (jQuery('li#annotation-' + item.id).find('textarea.panelTextArea').length == 0) {
+					if (jQuery('li'+prefix_annotationblock_selector + item.id).find('textarea.panelTextArea').length == 0) {
 						var content = item.text;
 						var editableTextArea = jQuery("<textarea id='textarea-" + item.id + "'' class='panelTextArea'>" + content + "</textarea>");
-						var annotationCSSReference = 'li#annotation-' + item.id + ' > div.annotator-marginviewer-text';
+						var annotationCSSReference = 'li'+prefix_annotationblock_selector + item.id + ' > div.annotator-marginviewer-text';
 
 						annotator_textArea.replaceWith(editableTextArea);
 						editableTextArea.css('height', editableTextArea[0].scrollHeight + 'px');
@@ -183,7 +181,7 @@ Drupal.behaviors.AnnotationViewer = {
 				AnnotatorViewer.prototype.onSavePanel = function(event) {
 
 					var current_annotation = event.data.annotation;
-					var textarea = jQuery('li#annotation-' + current_annotation.id).find("#textarea-" + current_annotation.id);
+					var textarea = jQuery('li'+prefix_annotationblock_selector + current_annotation.id).find("#textarea-" + current_annotation.id);
 					if (typeof(this.annotator.plugins.RichEditor) != 'undefined') {
 						current_annotation.text = tinymce.activeEditor.getContent();
 						tinymce.remove("#textarea-" + current_annotation.id);
@@ -209,11 +207,11 @@ Drupal.behaviors.AnnotationViewer = {
 
 						var textAnnotation = '<div class="anotador_text" ' + styleHeight + '>' + current_annotation.text + '</div>';
 						var anotacio_capa = '<div class="annotator-marginviewer-text"><div class="' + current_annotation.category + ' anotator_color_box"></div>' + textAnnotation + '</div>';
-						var textAreaEditor = jQuery('li#annotation-' + current_annotation.id + ' > .annotator-marginviewer-text');
+						var textAreaEditor = jQuery('li'+prefix_annotationblock_selector + current_annotation.id + ' > .annotator-marginviewer-text');
 
 						textAreaEditor.replaceWith(anotacio_capa);
 					} else {
-						var textarea = jQuery('li#annotation-' + current_annotation.id).find('textarea.panelTextArea');
+						var textarea = jQuery('li'+prefix_annotationblock_selector + current_annotation.id).find('textarea.panelTextArea');
 						this.normalEditor(current_annotation, textarea);
 					}
 
@@ -221,12 +219,11 @@ Drupal.behaviors.AnnotationViewer = {
 
 				//Annotator in a non editable state
 				AnnotatorViewer.prototype.normalEditor = function(annotation, editableTextArea) {
-					var buttons = jQuery('li#annotation-' + annotation.id).find('div.annotator-textarea-controls');
+					var buttons = jQuery('li'+prefix_annotationblock_selector + annotation.id).find('div.annotator-textarea-controls');
 					var textAnnotation = this.removeTags('iframe', annotation.text);
 					editableTextArea.replaceWith('<div class="anotador_text">' + textAnnotation + '</div>');
 					buttons.remove();
 				};
-
 
 
 				AnnotatorViewer.prototype.onDeleteMouseover = function(event) {
@@ -238,40 +235,35 @@ Drupal.behaviors.AnnotationViewer = {
 				};
 
 				AnnotatorViewer.prototype.onAnnotationCreated = function(annotation) {
-
 					this.createReferenceAnnotation(annotation);
-					jQuery('#count-anotations').text(jQuery(".container-anotacions").find('.annotator-marginviewer-element').length);
+					jQuery('#'+selector_annotationCount_id).text(jQuery('.'+selector_annotationContainer_class).find('.annotator-marginviewer-element').length);
 				};
 
 				AnnotatorViewer.prototype.onAnnotationUpdated = function(annotation) {
-
-					jQuery("#annotation-" + annotation.id).html(this.mascaraAnnotation(annotation));
+					jQuery(prefix_annotationblock_selector + annotation.id).html(this.mascaraAnnotation(annotation));
 				};
 
 				AnnotatorViewer.prototype.onAnnotationsLoaded = function(annotations) {
 					var annotation;
-					jQuery('#count-anotations').text(jQuery(".container-anotacions").find('.annotator-marginviewer-element').length);
+					// Update the annotation counter
+					jQuery('#'+selector_annotationCount_id).text(jQuery('.'+selector_annotationContainer_class).find('.annotator-marginviewer-element').length);
 					if (annotations.length > 0) {
 						for (i = 0, len = annotations.length; i < len; i++) {
 							annotation = annotations[i];
 							this.createReferenceAnnotation(annotation);
 						}
-
 					}
-
 				};
 
 
 				AnnotatorViewer.prototype.onAnnotationDeleted = function(annotation) {
-
-					jQuery("li").remove("#annotation-" + annotation.id);
-					jQuery('#count-anotations').text(jQuery(".container-anotacions").find('.annotator-marginviewer-element').length);
-
+					jQuery("li").remove(prefix_annotationblock_selector + annotation.id);
+					jQuery('#'+selector_annotationCount).text(jQuery('.'+selector_annotationContainer_class).find('.annotator-marginviewer-element').length);
 				};
 
+
+				// Build an individual annotation block (on the sidebar)
 				AnnotatorViewer.prototype.mascaraAnnotation = function(annotation) {
-
-
 					if (!annotation.data_creacio) annotation.data_creacio = jQuery.now();
 
 					var shared_annotation = "";
@@ -287,28 +279,35 @@ Drupal.behaviors.AnnotationViewer = {
 						delete_icon = "";
 					}
 
-					//If you have instal.led a plug-in for categorize anotations, panel viewer can get this information with the category atribute
-					if (annotation.category != null) {
-						anotation_color = annotation.category;
-					} else {
-						anotation_color = "hightlight";
+					// Set highlight color according to annotation categories
+					var anotation_class = "highlight ";
+					if (annotation.annotation_categories != null) {
+						for (var idx = 0; idx < annotation.annotation_categories.length; idx++) {
+    						thisCategoryID=annotation.annotation_categories[idx];
+							var thisClass="annotation_category-"+thisCategoryID;
+							anotation_class+=thisClass+' ';
+						}
 					}
+
+					//FIXME
 					var textAnnotation = annotation.text;
-					var annotation_layer = '<div class="annotator-marginviewer-text"><div class="' + anotation_color + ' anotator_color_box"></div>';
+					    //textAnnotation = 'UUID: '+annotation.uuid;
+					var annotation_layer = '<div class="annotator-marginviewer-text"><div class="' + anotation_class + ' anotator_color_box"></div>';
 					annotation_layer +=    '<div class="anotador_text">' + textAnnotation + '</div></div>';
 					annotation_layer +=    '<div class="annotator-marginviewer-date">' + jQuery.format.date(annotation.data_creacio, "dd/MM/yyyy HH:mm:ss") + '</div>';
 					annotation_layer +=    '<div class="annotator-marginviewer-quote">' + annotation.quote + '</div>';
-					annotation_layer +=    '<div class="annotator-marginviewer-footer"><span class="' + class_label + '">' + annotation.user + '</span>' + shared_annotation + delete_icon + '</div>';
+					annotation_layer +=    '<div class="annotator-marginviewer-footer"><span class="' + class_label + '">' + annotation.user + '</span>';
 
-
+					// FIXME: Disables trash and sharing icons
+					// annotation_layer += + shared_annotation + delete_icon + '</div>';
 
 					return annotation_layer;
 				};
 
 				AnnotatorViewer.prototype.createAnnotationPanel = function(annotation) {
 					var checboxes = '<label class="checkbox-inline"><input type="checkbox" id="type_own" rel="me"/>My annotations</label><label class="checkbox-inline">  <input type="checkbox" id="type_share" rel="shared"/>Shared</label>';
-
-					var annotation_layer = '<div  class="annotations-list-uoc" style="background-color:#ddd;"><div id="annotations-panel"><span class="rotate" title="' + i18n_dict.view_annotations + ' ' + i18n_dict.pdf_resum + '">' + i18n_dict.view_annotations + '<span class="label-counter" style="padding:0.2em 0.3em;float:right" id="count-anotations">0</span></span></div><div id="anotacions-uoc-panel" style="height:80%"><ul class="container-anotacions"><li class="filter-panel">' + checboxes + '</li></ul></div></div>';
+					var annotation_layer =  '<div class="annotations-list-uoc" style="background-color:#ddd;"><div id="annotations-panel"><span class="rotate" title="' + i18n_dict.view_annotations + ' ' + i18n_dict.pdf_resum + '">' + i18n_dict.view_annotations + '<span class="label-counter" style="padding:0.2em 0.3em;float:right" id="count-anotations">0</span></span></div>';
+				        annotation_layer += '<div id="'+selector_annotationPanel_id+'" style="height:80%"><ul class="container-anotacions"><li class="filter-panel">' + checboxes + '</li></ul></div></div>';
 					return annotation_layer;
 				};
 
@@ -320,7 +319,7 @@ Drupal.behaviors.AnnotationViewer = {
 					var myAnnotation = false;
 
 					if (annotation.id != null) {
-						anotation_reference = "annotation-" + annotation.id;
+						anotation_reference = "annotation-" + annotation.uuid;
 					} else {
 						annotation.id = this.uniqId();
 						//We need to add this id to the text anotation
@@ -331,11 +330,10 @@ Drupal.behaviors.AnnotationViewer = {
 						anotation_reference = "annotation-" + annotation.id;
 					}
 
-					//console.log(annotation.id+" "+annotation.uuid);
+
 
 					if (annotation.estat == 1 || annotation.permissions.read.length === 0) {
 						data_type = "shared";
-
 					}
 					if (annotation.propietary == 0) {
 						data_owner = "";
@@ -383,16 +381,16 @@ Drupal.behaviors.AnnotationViewer = {
 							}
 						});
 
-
-
-					//Adding annotation to data element for delete and link
+					//Inject annotation into data element
 					jQuery('#' + anotation_reference).data('annotation', annotation);
-					jQuery(anotacioObject).fadeIn('fast');
+
 				};
 
+				// UUID generator (why?)
 				AnnotatorViewer.prototype.uniqId = function() {
 					return Math.round(new Date().getTime() + (Math.random() * 100));
 				}
+
 
 				//Strip content tags
 				AnnotatorViewer.prototype.removeTags = function(striptags, html) {
@@ -405,27 +403,82 @@ Drupal.behaviors.AnnotationViewer = {
 					});
 				};
 
-				AnnotatorViewer.prototype.addToPage = function(){
+				// Scroll the viewer to a particular div
+				// FIXME: if you click a multiple-layered annotation, it will
+				// only take you to the first one
+				var scrollInProgress=false;
+				AnnotatorViewer.prototype.scrollTo = function(targetDiv){
+					if(scrollInProgress){console.log("no");return;}
+					scrollInProgress=true;
+
+					// On Deck
+					function doScroll(complete){
+						//console.log("Scroll to: " + targetDiv);
+						var annotationPanel = jQuery('#'+selector_annotationPanel_id);
+						var currentPosition=annotationPanel.scrollTop();
+						var targetDistanceFromTop=jQuery(targetDiv).position().top;
+						var scrollToVal = (targetDistanceFromTop-currentPosition);
+
+						// Clear selection indicator
+						jQuery(".annotator-marginviewer-element").removeClass("annotation_selected");
+
+
+						if(scrollToVal != 0){
+							// FIXME: this should work, but it doesn't, so we just go to 0 first and then offset
+							//console.log("Scrolling: "+scrollToVal + "(current:"+currentPosition+")");
+							//annotationPanel.slimScroll({ scrollTo : scrollToVal  });
+							annotationPanel.slimScroll({ scrollTo : '0px'  });
+							annotationPanel.slimScroll({ scrollTo : targetDistanceFromTop  });
+
+							// Bind scroll handler to clear selection indicator if scrollbar moved
+							annotationPanel.slimScroll().bind('slimscrolling', function (e, pos) {
+								jQuery(".annotator-marginviewer-element").removeClass("annotation_selected");
+							});
+						}
+						complete();
+					}
+
+					// Call with completion callback
+					doScroll(function(){
+						var target=jQuery(targetDiv);
+						target.addClass("annotation_selected");
+						scrollInProgress=false;
+
+
+					});
+
+				}
+
+				// Inject the panel into the page
+				AnnotatorViewer.prototype.addToPage = function(annotationViewer){
+
+					// Add the panel to the page
 					jQuery("body").append(this.createAnnotationPanel());
 
 					// Hide it
-					jQuery(".container-anotacions").hide();
+					jQuery('.'+selector_annotationContainer_class).hide();
 
 					// Toggle panel when clicked
 					jQuery("#annotations-panel").click(function(event) {
-						jQuery(".container-anotacions").toggle();
+						jQuery('.'+selector_annotationContainer_class).toggle();
 					});
 
 
-					// Make annotations clickable
+					// Make each snapshot annotation clickable
 					jQuery(".annotator-hl").click(function(event) {
 
 						// Open the pane (if closed)
-						jQuery(".container-anotacions").show();
+						jQuery('.'+selector_annotationContainer_class).show();
 
-						// Scroll to appropriate annotation
-						var targetid = "#sb" + this.id.toString();
+						// Grab the ID for this annotation
+						if(this.dataset.uuid){
+							var targetid = prefix_annotationblock_selector + this.dataset.uuid.toString();
+						}else{
+							console.error("ERROR: I cannot determine id for this annotation, missing uuid?");
+							return;
+						}
 
+						// Sanity checks to help debugging
 						if (jQuery('body').find('#anotacions-uoc-panel').length == 0) {
 							console.log("WARNING: I can't find the annotation panel!");
 							return;
@@ -435,29 +488,15 @@ Drupal.behaviors.AnnotationViewer = {
 							return;
 						}
 
-						console.log("Scroll to: " + targetid);
-						jQuery('#anotacions-uoc-panel').animate({
-								scrollTop: jQuery(targetid).offset().top
-							},
-							100,
-							// Completion callback
-							function() {
-								console.info("Finished scroll to: " + targetid);
-								jQuery(targetid).parent().addClass('hover');
-								jQuery(targetid).trigger("click");
-							}
-						);
+						// Move us to the annotation
+						annotationViewer.scrollTo(targetid);
 
 					});
 				};
 
-
-
+				// All good! Return the AV
 				return AnnotatorViewer;
-
 			})(Annotator.Plugin);
-
 		}).call(this);
-
 	}
 };

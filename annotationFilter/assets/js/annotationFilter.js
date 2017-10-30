@@ -50,8 +50,6 @@ Drupal.behaviors.annotationFilter = {
 
 							if (!isInitialized) {
 
-								console.log('Initializing...');
-
 								// Grab a reference to the all the annotations
 								annotations = $(".annotator-hl");
 
@@ -69,20 +67,19 @@ Drupal.behaviors.annotationFilter = {
 								// blank them out first
 								annotations.attr("style", "background-color:rgba(1,1,1,0.1);border:0");
 
-								// Otherwise just reset to original and GTFO
+							// Otherwise just reset to original and GTFO
 							} else {
-								annotations.attr("style", "background-color:rgba(0,0,0,0.0);border:0");
 								resetAnnotationsToOriginal();
 								return;
 							}
 
 							//Tags
-							console.log("%c TAGS: %c" + tagFilters, 'background: #bbbbbb; color: #0000FF', 'background: #FFFFFF; color: #000000');
+						    //console.log("%c TAGS: %c" + tagFilters, 'background: #bbbbbb; color: #0000FF', 'background: #FFFFFF; color: #000000');
 							for (var i = 0; i < tagFilters.length; i++) {
 								var thisTag = tagFilters[i];
 								$("span[data-tags~='" + thisTag + "']").attr("style", "border:1px solid red");
 							}
-				
+
 							//Categories
 							//console.log("%c CATEGORIES: %c" + categoryFilters, 'background: #bbbbbb; color: #EEFF00', 'background: #FFFFFF; color: #000000');
 							for (var i = 0; i < categoryFilters.length; i++) {
@@ -139,6 +136,7 @@ Drupal.behaviors.annotationFilter = {
 						// Resets the annotations to their original colors
 						function resetAnnotationsToOriginal() {
 							idx = 0;
+							annotations.attr("style", "background-color:rgba(0,0,0,0.0);border:0");
 							annotations.each(function(index) {
 								$(this).css("background-color", annotationColors[idx]);
 								idx++;
@@ -226,7 +224,7 @@ Drupal.behaviors.annotationFilter = {
 						});
 
 						window.annotationFilter_toggleFilterPanel = (function() {
-							window.annotationFilter_resetFilters();
+							annotationFilter_resetFilters();
 							jQuery('#annotation-well').toggle();
 						});
 

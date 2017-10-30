@@ -87,6 +87,8 @@ jQuery(function($) {
           $(annotation.highlights).addClass(category);
           $(annotation.highlights).attr('id', annotation.id );
 
+		  //console.log("Inserting id:"+annotation.id);
+
 		  /*
 		 var categoryIDs = annotation.category.toString();
 		 categoryIDs = categoryIDs.split(',');
@@ -99,7 +101,7 @@ jQuery(function($) {
 			 $(annotation.highlights).addClass(category);
 		 }
 		 */
-		 
+
         }
 
       }
@@ -109,9 +111,7 @@ jQuery(function($) {
      //After loading annotations we want to change the annotation color and add the annotation id
     Categories.prototype.updateAnnotation = function(annotation) {
       var category = this.options.categories[annotation.category];
-
       $(annotation.highlights).attr("class","annotator-hl " + category);
-
     };
 
      //After loading annotations we want to change the annotation color and add the annotation id

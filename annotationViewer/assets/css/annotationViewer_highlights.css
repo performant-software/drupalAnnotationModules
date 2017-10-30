@@ -8,6 +8,16 @@ IMPORTANT: If you want to change these you should NOT edit them here, instead
 make a copy of the block you want to change into your theme CSS and edit that.
 */
 
+.annotation_selected{
+	border: 3px yellow dashed;
+	background-color: #ffd600;
+}
+.highlight {
+	background: yellow;
+	border: 1px solid #b3b3b3;
+	height: 20px;
+}
+
 .annotator-hl {
 	background: rgba(255, 255, 10, 0.3)
 }
