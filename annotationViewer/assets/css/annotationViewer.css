@@ -7,14 +7,18 @@ IMPORTANT: If you want to change these you should NOT edit them here, instead
 make a copy of the block you want to change into your theme CSS and edit that.
 */
 
+
 /* Lifted from bootstrap */
+
 * {
-  -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box;
-  box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
 }
 
+
 /* Temporary turning of annotatin tooltips*/
+
 .annotator-outer.annotator-viewer {
 	display: none;
 }
@@ -25,6 +29,7 @@ make a copy of the block you want to change into your theme CSS and edit that.
 
 
 /*This turns off the annotator adder--effectively making this read only */
+
 .annotator-adder {
 	display: none !important;
 }
@@ -116,10 +121,6 @@ make a copy of the block you want to change into your theme CSS and edit that.
 
 /* removing the counter for now since not working*/
 
-span#count-anotations {
-	display: none;
-}
-
 #search {
 	padding: 5px;
 	padding-left: 20px;
@@ -139,6 +140,14 @@ span#count-anotations {
 }
 
 .rotate {
+	padding: 5px;
+	background-color: #ddd;
+	position: absolute;
+	top: 10em;
+	left: -75px;
+	width: 200px;
+	height: 110px;
+	cursor: pointer;
 	-webkit-transform: rotate(-90deg);
 	-moz-transform: rotate(-90deg);
 	-ms-transform: rotate(-90deg);
@@ -154,7 +163,6 @@ span#count-anotations {
 	filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=3);
 	text-align: center;
 	margin: 0 auto;
-
 	color: #6689a1;
 	font-weight: bold;
 	/* text-transform: uppercase; */
@@ -347,9 +355,10 @@ span#count-anotations {
 	padding-left: 0.1em;
 }
 
-.anotador_text img{
-	width:100%;
+.anotador_text img {
+	width: 100%;
 }
+
 .annotator-marginviewer-highlighted>.annotator-marginviewer-text {}
 
 .annotator-marginviewer-selected>.annotator-marginviewer-text {
@@ -380,7 +389,6 @@ span#count-anotations {
 .loweralpha {
 	list-style-type: lower-alpha;
 }
-
 
 .table {
 	margin-bottom: 0px;
@@ -450,7 +458,6 @@ span#count-anotations {
 	position: static;
 	width: auto;
 }
-
 
 
 /*
@@ -1138,9 +1145,6 @@ ol.oluoc .numeracio {
 	border: 0px solid #F39200;
 	padding: 6px 17px;
 }
-
-
-
 
 
 /*  Annotator Touch Plugin - v1.1.1

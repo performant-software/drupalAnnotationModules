@@ -9,4 +9,5 @@ function annotationFilter_init() {
 function annotationFilter_preprocess_page(&$vars) {
   // FIXME: This should eventually be removed, in favor of Drupal Select2 module
   drupal_add_js('https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.4/js/select2.min.js', 'external');
+  drupal_add_css('https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css', 'external');
 }

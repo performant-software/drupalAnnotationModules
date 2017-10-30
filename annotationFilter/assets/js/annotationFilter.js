@@ -4,12 +4,13 @@
 ///////////////////////////////////////
 
 // Wrap in drupal so we can get injected vars (in this case we want the basepath for the module later)
-Drupal.behaviors.MYMODULE = {
+Drupal.behaviors.annotationFilter = {
 	attach: function(context, settings) {
 
 		// Wait for document to load AND the DOM to be fully present (belt and suspenders)
 		jQuery(document).ready(function($) {
 			$(window).on("load", function() {
+
 
 				// If we find annotation on this page, begin
 				if ($('.field-name-body').find('.lineno').length !== 0) {
@@ -17,7 +18,7 @@ Drupal.behaviors.MYMODULE = {
 					console.log('AnnotationFilter: Ok! Injecting filters.');
 
 					// Filter panel visible or not, injects next to title
-					var filterButton = ' [<a href="javascript:annotationFilter_toggleFilterPanel();">filter</a>]';
+					var filterButton = ' <a href="javascript:annotationFilter_toggleFilterPanel();"><span class="fa fa-filter" aria-hidden="true"></span></a>';
 					$('.block-title').append(filterButton);
 
 					// This is the HTML for the panel itself
@@ -28,7 +29,7 @@ Drupal.behaviors.MYMODULE = {
 					$("#annotationFilter_temp").load(htmlFile, function() {
 
 						// Hide the panel by default
-						////$('#annotation-well').hide();
+						$('#annotation-well').hide();
 
 						// Append and remove placeholder`
 						$('.field-name-body').append($(this).html());
@@ -76,22 +77,17 @@ Drupal.behaviors.MYMODULE = {
 							}
 
 							//Tags
-							//console.log("%c TAGS: %c" + tagFilters, 'background: #bbbbbb; color: #0000FF', 'background: #FFFFFF; color: #000000');
-							annotations.each(function(index) {
-								var annotations = $('.field-name-body').annotator().annotator().data;
-								var annotator = $('.field-name-body').annotator().annotator().data('annotator');
-								console.log('Checking...: ' + this.id);
-								var thisObject = document.getElementById(this.id);
-								for (var i = 0; i < tagFilters.length; i++) {
-									var thisTag = tagFilters[i];
-									console.log("....Looking for match for " + thisTag);
-								}
-							});
+							console.log("%c TAGS: %c" + tagFilters, 'background: #bbbbbb; color: #0000FF', 'background: #FFFFFF; color: #000000');
+							for (var i = 0; i < tagFilters.length; i++) {
+								var thisTag = tagFilters[i];
+								$("span[data-tags~='" + thisTag + "']").attr("style", "border:1px solid red");
+							}
+				
 							//Categories
 							//console.log("%c CATEGORIES: %c" + categoryFilters, 'background: #bbbbbb; color: #EEFF00', 'background: #FFFFFF; color: #000000');
 							for (var i = 0; i < categoryFilters.length; i++) {
 								var thisCategory = categoryFilters[i];
-								$("span[data-category~='" + thisCategory + "']").attr("style", "border:1px solid green");
+								$("span[data-annotation_categories~='" + thisCategory + "']").attr("style", "border:1px solid green");
 							}
 
 							//Annotators
@@ -178,29 +174,29 @@ Drupal.behaviors.MYMODULE = {
 							tf = $('#tag-filter').select2({
 								data: filterLists['tags'],
 								allowClear: true,
-								placeholder: "Select one or more tags",
+								placeholder: "Tags",
 								theme: "classic",
-								width: "300px",
+								width: "20rem",
 								allowClear: false
 							});
 
 
 
 							cf = $('#cat-filter').select2({
-								data: filterLists['category'],
+								data: filterLists['annotation_categories'],
 								allowClear: true,
-								placeholder: "Select one or more categories",
+								placeholder: "Categories",
 								theme: "classic",
-								width: "300px",
+								width: "20rem",
 								allowClear: false
 							});
 
 							uf = $('#user-filter').select2({
 								data: filterLists['user'],
 								allowClear: true,
-								placeholder: "Select one or more annotators",
+								placeholder: "Annotators",
 								theme: "classic",
-								width: "300px",
+								width: "20rem",
 								allowClear: false
 							});
 						}
@@ -217,6 +213,10 @@ Drupal.behaviors.MYMODULE = {
 							annotatorFilters = [];
 						}
 
+						// Inject a stylesheet
+						tf.data('select2').$container.addClass("tagColor");
+						cf.data('select2').$container.addClass("categoryColor");
+						uf.data('select2').$container.addClass("userColor");
 
 						window.annotationFilter_resetFilters = (function() {
 							if (isInitialized) {

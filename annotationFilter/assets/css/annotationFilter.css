@@ -4,6 +4,18 @@
 */
 
 /* Puts the annotator thing at the bottom */
+.tagColor{
+	border-radius: 0.3rem;
+	border:1px solid red;
+}
+.categoryColor{
+	border-radius: 0.3rem;
+	border:1px solid green;
+}
+.userColor{
+	border-radius: 0.3rem;
+	border:1px solid blue;
+}
 #annotation-well{
 	margin: 0;
     border-radius: 0.3rem 0.3rem 0 0;

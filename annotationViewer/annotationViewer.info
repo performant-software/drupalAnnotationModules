@@ -21,10 +21,10 @@ scripts[] = assets/js/jquery.slimscroll.js
 
 ; Annotator plugins
 ; FIXME: I don't think these are all necessary
-scripts[] = assets/js/view_annotator.js
 scripts[] = assets/js/categories.js
 scripts[] = assets/js/tinymce/tinymce.min.js
 scripts[] = assets/js/richEditor.js
+scripts[] = assets/js/view_annotator.js
 
 ; Initialize the annotation viewer
 scripts[] = assets/js/annotationViewer_init.js
