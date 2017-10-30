@@ -19,12 +19,14 @@ Drupal.behaviors.annotationFilter = {
 
 					// Filter panel visible or not, injects next to title
 					var filterButton = ' <a href="javascript:annotationFilter_toggleFilterPanel();"><span class="fa fa-filter" aria-hidden="true"></span></a>';
-					$('.block-title').append(filterButton);
+					$('.field-name-body .block-title').append(filterButton);
 
 					// This is the HTML for the panel itself
 					// We first inject a placeholder, load the content into that and then
 					// one it's all loaded we append it to the content
-					var htmlFile = Drupal.settings.annotationFilter.basepath + '/assets/html/annotationFilter.html';
+					//// FIXME: basepath is returning wrong value on COVE Drupal install
+					//// var htmlFile = Drupal.settings.annotationFilter.basepath + '/assets/html/annotationFilter.html';
+					var htmlFile = '/sites/all/modules/annotationFilter/assets/html/annotationFilter.html';
 					$('.field-name-body').append('<div id="annotationFilter_temp"></div>');
 					$("#annotationFilter_temp").load(htmlFile, function() {
 

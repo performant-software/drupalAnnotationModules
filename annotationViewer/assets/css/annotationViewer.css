@@ -17,6 +17,7 @@ make a copy of the block you want to change into your theme CSS and edit that.
 }
 
 
+
 /* Temporary turning of annotatin tooltips*/
 .annotator-outer.annotator-viewer {
 	display: none;
@@ -263,8 +264,8 @@ make a copy of the block you want to change into your theme CSS and edit that.
 	white-space: nowrap;
 	margin-top: 4px;
 	border: 1px solid #676767;
-	color: #333333;
-	font-size: 11px;
+	color: #333333 !important;
+	font-size:.7rem !important;
 }
 
 .container-anotacions {
