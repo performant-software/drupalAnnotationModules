@@ -13,7 +13,7 @@ Drupal.behaviors.annotationFilter = {
 
 
 				// If we find annotation on this page, begin
-				if ($('.field-name-body').find('.lineno').length !== 0) {
+				if ($('body').find('.field-name-body').length !== 0) {
 
 					console.log('AnnotationFilter: Ok! Injecting filters.');
 
